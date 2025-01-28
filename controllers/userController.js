@@ -151,7 +151,7 @@ export const verifyOtp = async (req, res) => {
 //Login User
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
-
+    console.log(email, password);
     try {
         const user = await userModel.findOne({ email });
         if (!user) {
