@@ -13,6 +13,8 @@ dotenv.config()
 connectDb();
 
 const app = express();
+//middlewares
+app.use(express.json())
 
 app.use(
     cors({
@@ -24,8 +26,6 @@ app.use(
     })
   );
 
-//middlewares
-app.use(express.json())
 
 //routes
 app.use('/api/user', userRoute)
