@@ -37,6 +37,8 @@ export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     const profileImage = req.file?.fieldname;
     const picturePath = req.file?.path;
+
+    console.log(name, email, password, picturePath);
     try {
         const emailExist = await userModel.findOne({ email });
         if (emailExist) {
@@ -48,6 +50,7 @@ export const registerUser = async (req, res) => {
 
         //uploading image on cloudinary
         const {secure_url, public_id} = await imageOnCloudinary(picturePath, "users");
+        console.log(secure_url)
         if (!secure_url){
             return res.status(400).send({
                 success: false,
@@ -76,7 +79,7 @@ export const registerUser = async (req, res) => {
             success: true,
             message: "OTP sent to your email. Please verify to complete registration.",
         });
-        console.log(req.file);
+        
     } catch (error) {
         console.log(error);
         res.status(500).send({
@@ -147,7 +150,6 @@ export const verifyOtp = async (req, res) => {
     }
 };
 
-
 //Login User
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -188,9 +190,6 @@ export const loginUser = async (req, res) => {
         });
     }
 };
-
-
-
 
 // Get Single User
 export const getSingleUser = async (req, res) => {
