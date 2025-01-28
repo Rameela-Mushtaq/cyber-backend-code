@@ -37,8 +37,6 @@ export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
     const profileImage = req.file?.fieldname;
     const picturePath = req.file?.path;
-
-    console.log(name, email, password, picturePath);
     try {
         const emailExist = await userModel.findOne({ email });
         if (emailExist) {
@@ -49,15 +47,14 @@ export const registerUser = async (req, res) => {
         }
 
         //uploading image on cloudinary
-        const {secure_url, public_id} = await imageOnCloudinary(picturePath, "users");
-        console.log(secure_url)
-        if (!secure_url){
-            return res.status(400).send({
-                success: false,
-                message: "Error While uploading image",
-                error: secure_url
-            })
-        }
+        // const {secure_url, public_id} = await imageOnCloudinary(picturePath, "users");
+        // if (!secure_url){
+        //     return res.status(400).send({
+        //         success: false,
+        //         message: "Error While uploading image",
+        //         error: secure_url
+        //     })
+        // }
 
         //const prefixedName = `Mr. ${name}`;
 
@@ -65,10 +62,10 @@ export const registerUser = async (req, res) => {
             name: name,
             email: email,
             password: password,
-            profileImage: {
-               secure_url,
-               public_id,
-            },
+            // profileImage: {
+            //    secure_url,
+            //    public_id,
+            // },
             isVerified: false
         });
 
