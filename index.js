@@ -18,7 +18,8 @@ app.use(
     cors({
       origin: [
         "http://localhost:3000",
-        //@ts-nocheck"https://cyber-frontend-gamma.vercel.app",
+        //@ts-nocheck
+         "https://cyber-frontend-gamma.vercel.app",
       ],
       credentials: true,
     })
