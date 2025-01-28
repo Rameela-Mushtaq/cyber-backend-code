@@ -10,28 +10,27 @@ dotenv.config()
     api_secret: process.env.CLOUDINARY_SECRET // Click 'View API Keys' above to copy your API secret
 });
 
-const imageOnCloudinary = async (filePath, folderName) =>  {
+// Function to upload file directly to Cloudinary
+const imageOnCloudinary = async (buffer, folderName, fileName) => {
     try {
-        //upload image from server to cloudinary
-        const result = await cloudinary.uploader.upload(filePath, {
-            folder: folderName
-        });
-
-        //delete image from server
-        try {
-            fs.unlinkSync(filePath);
-        } catch (error) {
-            console.log("Failed to delete image from server", error)
-        }
-        
-        console.log(result);
-        return {
-            secure_url: result.secure_url,
-            public_id: result.public_id,
-        }
+      // Convert buffer to base64
+      const base64String = buffer.toString('base64');
+      const dataUri = `data:image/jpeg;base64,${base64String}`;
+  
+      // Upload image to Cloudinary
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: folderName,
+        public_id: fileName, // Optional: custom name
+      });
+  
+      return {
+        secure_url: result.secure_url,
+        public_id: result.public_id,
+      };
     } catch (error) {
-        throw new Error(error);
+      console.error('Error uploading to Cloudinary:', error);
+      throw new Error(error);
     }
-}
-
-export {imageOnCloudinary};
+  };
+  
+  export { imageOnCloudinary };

@@ -35,57 +35,65 @@ const verifyMail = async (email, otp) => {
 // Register User
 export const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
-    const profileImage = req.file?.fieldname;
-    const picturePath = req.file?.path;
+  
     try {
-        const emailExist = await userModel.findOne({ email });
-        if (emailExist) {
-            return res.status(401).send({
-                success: false,
-                message: "User already exists",
-            });
-        }
-
-        //uploading image on cloudinary
-        const {secure_url, public_id} = await imageOnCloudinary(picturePath, "users");
-        if (!secure_url){
-            return res.status(400).send({
-                success: false,
-                message: "Error While uploading image",
-                error: secure_url
-            })
-        }
-
-        //const prefixedName = `Mr. ${name}`;
-
-        const user = await userModel.create({
-            name: name,
-            email: email,
-            password: password,
-            profileImage: {
-               secure_url,
-               public_id,
-            },
-            isVerified: false
+      // Check if the email already exists
+      const emailExist = await userModel.findOne({ email });
+      if (emailExist) {
+        return res.status(401).send({
+          success: false,
+          message: "User already exists",
         });
-
-        await setOtpAndExpiry(user);
-
-        await verifyMail(email, user.otp);
-        res.status(201).send({
-            success: true,
-            message: "OTP sent to your email. Please verify to complete registration.",
-        });
-        
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({
+      }
+  
+      // Upload profile image to Cloudinary if file is provided
+      let profileImage = {};
+      if (req.file) {
+        const fileBuffer = req.file.buffer; // Use buffer from multer
+        const fileName = req.file.originalname.split('.')[0]; // Optional: Use original file name without extension
+        const { secure_url, public_id } = await imageOnCloudinary(fileBuffer, "users", fileName);
+  
+        if (!secure_url) {
+          return res.status(400).send({
             success: false,
-            message: "Error in Register API",
-            error,
-        });
+            message: "Error while uploading image",
+            error: secure_url,
+          });
+        }
+  
+        profileImage = {
+          secure_url,
+          public_id,
+        };
+      }
+  
+      // Create a new user
+      const user = await userModel.create({
+        name: name,
+        email: email,
+        password: password,
+        profileImage,
+        isVerified: false,
+      });
+  
+      // Set OTP and send verification email
+      await setOtpAndExpiry(user);
+      await verifyMail(email, user.otp);
+  
+      res.status(201).send({
+        success: true,
+        message: "OTP sent to your email. Please verify to complete registration.",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        success: false,
+        message: "Error in Register API",
+        error,
+      });
     }
-};
+  };
+  
 
 // Otp verification
 export const verifyOtp = async (req, res) => {
