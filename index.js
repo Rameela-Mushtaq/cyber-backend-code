@@ -5,6 +5,9 @@ import cors from 'cors'
 
 //import the route
 import userRoute from './routes/userRoute.js'
+import resourceRoute from './routes/resourceRoute.js'
+import categoryRoute from './routes/categoryRoute.js'
+
 
 //env config
 dotenv.config()
@@ -29,6 +32,8 @@ app.use(
 
 //routes
 app.use('/api/user', userRoute)
+app.use('/api/resource', resourceRoute)
+app.use('/api/category', categoryRoute)
 
 
 app.get("/", (req, res) => {
