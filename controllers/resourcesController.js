@@ -1,14 +1,5 @@
 import { imageOnCloudinary } from "../utils/cloudinary.js";
 import { resourcesModel } from "../models/resources.js"
-import { categoryModel } from "../models/category.js";
-
-// // Check if the category exists
-        // const category = await categoryModel.findById(categoryId);
-        // if (!category) {
-        //     return res.status(404).send({
-        //         message: 'Category not found'
-        //     });
-        // }
 
 // Create a new resource
 export const createResource = async (req, res) => {
@@ -41,10 +32,10 @@ export const createResource = async (req, res) => {
         const newResource = await resourcesModel.create({
             title,
             description,
-            link,       // Optional
-            category,   // Required
-            video: videoUrl,  // Optional
-            picture: pictureUrl,  // Optional
+            link,       
+            category,   
+            video: videoUrl,  
+            picture: pictureUrl,  
         });
 
         await newResource.save();

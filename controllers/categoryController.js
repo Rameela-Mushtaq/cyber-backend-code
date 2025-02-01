@@ -1,8 +1,7 @@
-// controllers/categoryController.js
 import { categoryModel } from '../models/category.js';
-import { imageOnCloudinary } from '../utils/cloudinary.js'; // Import Cloudinary upload function
+import { imageOnCloudinary } from '../utils/cloudinary.js';
 
-// Create a new category with Cloudinary image upload
+// Create a new category 
 export const createCategory = async (req, res) => {
     try {
         const { title, description } = req.body;
@@ -26,7 +25,7 @@ export const createCategory = async (req, res) => {
         const newCategory = new categoryModel({ title, description, image: imageUrl });
         await newCategory.save();
 
-        res.status(201).send(newCategory);  // This sends the response after category is saved.
+        res.status(201).send(newCategory);  
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: "Failed to create category" });
@@ -52,7 +51,7 @@ export const getCategories = async (req, res) => {
 };
 
 
-// Update category with Cloudinary image handling
+// Update category
 export const updateCategory = async (req, res) => {
     try {
         const { id } = req.params;
