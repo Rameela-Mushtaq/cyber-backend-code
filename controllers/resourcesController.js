@@ -13,13 +13,13 @@ import { categoryModel } from "../models/category.js";
 // Create a new resource
 export const createResource = async (req, res) => {
     try {
-        const { title, description, link, category } = req.body;
+        const { title, description, link,  category } = req.body;
 
         // Validate mandatory fields
-        if (!title || !description || !category) {
+        if (!title || !description  ) {
             return res.status(400).send({
                 success: false,
-                message: 'Title, Description, and Category are required',
+                message: 'Title and Description both are required',
             });
         }
 
